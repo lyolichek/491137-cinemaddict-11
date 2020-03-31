@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Лёля](https://up.htmlacademy.ru/ecmascript/11/user/491137).
-* Наставник: `Денис Корнейчук `.
+* Наставник: `Денис Корнейчук`.
 
 ---
 
