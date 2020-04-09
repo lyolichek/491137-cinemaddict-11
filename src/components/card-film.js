@@ -18,5 +18,5 @@ export const createCardFilmTemplate = () => {
             <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
           </form>
         </article>`
-  )
+  );
 };

@@ -170,5 +170,5 @@ export const creatFilmDetailsTemplate = () => {
     </div>
   </form>
 </section>`
-  )
+  );
 };
