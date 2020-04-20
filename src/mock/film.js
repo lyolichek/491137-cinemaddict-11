@@ -134,8 +134,9 @@ const generateFilmDetail = () => {
     writers: getRandomItem(NAMES),
     actors: getRandomItems(NAMES),
     country: getRandomItem(COUNTRY),
+
     comments: new Array (getRandomInteger(1, 5)).fill(``).map(generateComment)
-   };
+  };
 };
 
 // формируем массив объектов

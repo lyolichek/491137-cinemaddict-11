@@ -4,15 +4,15 @@ const createMainNavMarkup = (filters) => {
     `<div class="main-navigation__items">
       ${filters.map((item) => {
       const {title, link, activeClass, count} = item;
-      if(!count){
+      if (!count){
         return `<a href="${link}" class="main-navigation__item ${activeClass}">${title}</a>`;
       }
-      
       return `<a href="${link}" class="main-navigation__item ${activeClass}">${title} <span class="main-navigation__item-count">${count}</span></a>`;
-      }).join('\n')
-    }</div>`
+      }).join('\n')};
+    </div>`
   );
 };
+
 
 // ---- создание навигации
 export const createMainNavTemplate = (filters) => {
