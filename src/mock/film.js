@@ -135,7 +135,7 @@ const generateFilmDetail = () => {
     actors: getRandomItems(NAMES),
     country: getRandomItem(COUNTRY),
 
-    comments: new Array (getRandomInteger(1, 5)).fill(``).map(generateComment)
+    comments: new Array (getRandomInteger(1, 5)).fill(``).map(generateComment),
   };
 };
 

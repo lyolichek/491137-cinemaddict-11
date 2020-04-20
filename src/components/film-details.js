@@ -1,4 +1,4 @@
-import {createCommentMarkup} from "./film-comment.js"
+import {createCommentMarkup} from "./film-comment.js";
 
 export const creatFilmDetailsTemplate = (film) => {
   const {title, rating, age, poster, director, writers, actors, date, year, country, duration, description, comments} = film;
