@@ -1,6 +1,5 @@
 import {createCommentMarkup} from "./film-comment.js"
 
-// ---- создает попап с подробной информацией о фильме
 export const creatFilmDetailsTemplate = (film) => {
   const {title, rating, age, poster, director, writers, actors, date, year, country, duration, description, comments} = film;
 

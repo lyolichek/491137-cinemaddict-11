@@ -108,7 +108,7 @@ const generateComment = () => {
     text: getRandomItem(COMMENT_TEXT),
     author: getRandomItem(NAMES),
     date: generateDate()
-  }
+  };
 };
 
 const generateDate = () => {
@@ -120,22 +120,22 @@ const generateDate = () => {
 
 // создаем обьект и наполняет его информацией о фильме
 const generateFilmDetail = () => {
-   return {
-     title: getRandomItem(TITLES),
-     age: getRandomInteger(FILM_DETAILS_AGE_MIN, FILM_DETAILS_AGE_MAX),
-     rating: `${getRandomInteger(1, 10)}.${getRandomInteger(1, 9)}`,
-     year: getRandomInteger(1988, 2020),
-     date: `${getRandomInteger(1, 30)} ${getRandomItem(MONTH)}`,
-     duration: `1h 55m`,
-     genre: getRandomItem(GENRES),
-     poster: getRandomItem(POSTERS),
-     description: getRandomItem(DESCRIPTIONS),
-     director: getRandomItem(NAMES),
-     writers: getRandomItem(NAMES),
-     actors: getRandomItems(NAMES),
-     country: getRandomItem(COUNTRY),
-     comments: new Array (getRandomInteger(1, 5)).fill(``).map(generateComment)
-   }
+  return {
+    title: getRandomItem(TITLES),
+    age: getRandomInteger(FILM_DETAILS_AGE_MIN, FILM_DETAILS_AGE_MAX),
+    rating: `${getRandomInteger(1, 10)}.${getRandomInteger(1, 9)}`,
+    year: getRandomInteger(1988, 2020),
+    date: `${getRandomInteger(1, 30)} ${getRandomItem(MONTH)}`,
+    duration: `1h 55m`,
+    genre: getRandomItem(GENRES),
+    poster: getRandomItem(POSTERS),
+    description: getRandomItem(DESCRIPTIONS),
+    director: getRandomItem(NAMES),
+    writers: getRandomItem(NAMES),
+    actors: getRandomItems(NAMES),
+    country: getRandomItem(COUNTRY),
+    comments: new Array (getRandomInteger(1, 5)).fill(``).map(generateComment)
+   };
 };
 
 // формируем массив объектов

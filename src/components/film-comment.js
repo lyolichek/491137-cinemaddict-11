@@ -15,5 +15,5 @@ export const createCommentMarkup = (comment) => {
         </p>
       </div>
      </li>`
-  )
+  );
 };
