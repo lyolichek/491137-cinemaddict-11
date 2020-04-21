@@ -1,20 +1,30 @@
+import {SORT_BUTTON} from "./const.js"
+
 import {createProfileTemplate} from "./components/profile.js"
 import {createStatisticsTemplate} from "./components/statistics.js"
-import {createMainNavTemplate} from "./components/main-navigation.js"
-import {createSortTemplate} from "./components/sort.js"
-import {createFilmsListTemplate} from "./components/films-list.js"
-import {createFilmsListExtraTemplate} from "./components/films-list-extra.js"
-import {createCardFilmTemplate} from "./components/card-film.js"
-import {createFilmsSectionTemplate} from "./components/films-section.js"
-import {createShowMoreElement} from "./components/show-more-button.js"
-import {creatFilmDetailsTemplate} from "./components/film-details.js"
 
-const TOTAL_FILM_CARDS = 5;
-const TOTAL_FILM_CARDS_EXTRA = 2;
+import {createMainNavTemplate} from "./components/main-navigation.js"
+import {generateMainNavItem} from "./mock/main-navigation.js"
+
+import {createSortTemplate} from "./components/sort.js"
+import {createFilmsSectionTemplate} from "./components/films-section.js"
+import {generateFilms} from "./mock/film.js"
+
+import {createFilmCardTemplate} from "./components/film-card.js"
+
+import {creatFilmDetailsTemplate} from "./components/film-details.js"
+import {createShowMoreElement} from "./components/show-more-button.js"
+
+const FIRST_FILMS_CARD = 5;
+const SHOW_MORE_FILMS_CARD = 5;
+const TOTAL_FILMS_CARD = 20;
 const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 const footerElement = document.querySelector('.footer');
 const footerStatisticsElement = footerElement.querySelector('.footer__statistics');
+
+const mainNavFilter = generateMainNavItem();
+const films = generateFilms(TOTAL_FILMS_CARD);  // массив обьектов карточек фильма
 
 // ---- функция отрисовки компонентов
 const render = (container, template, count = 1, place = `beforeend`) => {
@@ -27,30 +37,36 @@ const render = (container, template, count = 1, place = `beforeend`) => {
   }
 };
 
-render(headerElement, createProfileTemplate());
+render(mainElement, createMainNavTemplate(mainNavFilter), `afterBegin`);
 render(footerStatisticsElement, createStatisticsTemplate());
-render(mainElement, createMainNavTemplate(), `afterBegin`);
-render(mainElement, createSortTemplate());
+render(mainElement, createSortTemplate(SORT_BUTTON));
+render(headerElement, createProfileTemplate());
 render(mainElement, createFilmsSectionTemplate());
+render(footerElement, creatFilmDetailsTemplate(films[0]), `afterEnd`);
 
-const allFilmsSectionElement = mainElement.querySelector('.films');
-render(allFilmsSectionElement, createFilmsListTemplate());
+const filmsListElement = mainElement.querySelector(`.films-list`);
+const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-const filmListSectionElement = allFilmsSectionElement.querySelector('.films-list');
-const filmsListContainerElement = filmListSectionElement.querySelector('.films-list__container');
-render(filmsListContainerElement, createCardFilmTemplate(), TOTAL_FILM_CARDS);
+let showFilmsCard = FIRST_FILMS_CARD;
 
-render(filmListSectionElement, createShowMoreElement());
+films.slice(0, FIRST_FILMS_CARD).forEach((item) => render(filmsContainerElement, createFilmCardTemplate(item)));
 
-render(allFilmsSectionElement, createFilmsListExtraTemplate(`Top rated`));
-render(allFilmsSectionElement, createFilmsListExtraTemplate(`Most commented`));
+render(filmsListElement, createShowMoreElement());
 
-const filmsListExtraContainerElement = mainElement.querySelectorAll(`.films-list--extra .films-list__container`);
+const showMoreButton = mainElement.querySelector(`.films-list__show-more`);
 
-filmsListExtraContainerElement.forEach((item) => {
-  render(item, createCardFilmTemplate(), TOTAL_FILM_CARDS_EXTRA);
+//  отрисовка карточек при клике на кнопку show More
+showMoreButton.addEventListener('click', function(){
+  const prewFilmsCard = showFilmsCard;
+  showFilmsCard = showFilmsCard + SHOW_MORE_FILMS_CARD;
+
+  films.slice(prewFilmsCard, showFilmsCard)
+    .forEach((item) => render(filmsContainerElement, createFilmCardTemplate(item)));
+
+  if(showFilmsCard >= films.length) {
+    showMoreButton.remove();
+  }
 });
 
-render(footerElement, creatFilmDetailsTemplate(), `afterEnd`);
 const filmDetailsElement = document.querySelector('.film-details');
 filmDetailsElement.style.display = 'none';

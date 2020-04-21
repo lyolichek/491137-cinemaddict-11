@@ -1,4 +1,13 @@
-// ---- создает контейнер для всех фильмов
-export const createFilmsSectionTemplate = () => (
-  `<section class="films"></section>`
-);
+// ---- создает контейнер для всех списков фильмов
+export const createFilmsSectionTemplate = () => {
+  return (
+    `<section class="films">
+      <section class="films-list">
+        <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+        <div class="films-list__container">
+        </div>
+      </section>
+    </section>`
+  );
+};
+
