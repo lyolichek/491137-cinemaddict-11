@@ -1,3 +1,5 @@
+import {SORT_BUTTON} from "./const.js"
+
 import {createProfileTemplate} from "./components/profile.js"
 import {createStatisticsTemplate} from "./components/statistics.js"
 
@@ -37,7 +39,7 @@ const render = (container, template, count = 1, place = `beforeend`) => {
 
 render(mainElement, createMainNavTemplate(mainNavFilter), `afterBegin`);
 render(footerStatisticsElement, createStatisticsTemplate());
-render(mainElement, createSortTemplate());
+render(mainElement, createSortTemplate(SORT_BUTTON));
 render(headerElement, createProfileTemplate());
 render(mainElement, createFilmsSectionTemplate());
 render(footerElement, creatFilmDetailsTemplate(films[0]), `afterEnd`);

@@ -1,10 +1,16 @@
-// ---- создает фильтр
-export const createSortTemplate = () => {
+const createSortMarkup = (item) => {
+  const {name, link, active} = item;
+
   return (
-    `<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>`
+    `<li><a href="${link}" class="sort__button ${active}">${name}</a></li>`
   );
+};
+
+// ---- создает фильтр
+export const createSortTemplate = (sort) => {
+  return (`
+  <ul class="sort">
+      ${sort.map((item) => createSortMarkup(item)).join(``)}
+  </ul>
+  `);
 };
