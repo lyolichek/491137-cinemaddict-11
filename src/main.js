@@ -1,14 +1,15 @@
-import {SORT_BUTTON} from "./const.js"
+import {PROFILE_RATING} from "./const.js"
+import {render, renderStr} from "./utils.js";
 
-import {createProfileTemplate} from "./components/profile.js"
-import {createStatisticsTemplate} from "./components/statistics.js"
+import {ProfileRatingComponent} from "./components/profile.js"
+import {StatisticsComponent} from "./components/statistics.js"
 
-import {createMainNavTemplate} from "./components/main-navigation.js"
+import {MainNavComponent} from "./components/main-navigation.js"
 import {generateMainNavItem} from "./mock/main-navigation.js"
 
-import {createSortTemplate} from "./components/sort.js"
+import {SortComponent} from "./components/sort.js"
 import {createFilmsSectionTemplate} from "./components/films-section.js"
-import {generateFilms} from "./mock/film.js"
+import {generateFilms, generateProfileRrating} from "./mock/film.js"
 
 import {createFilmCardTemplate} from "./components/film-card.js"
 
@@ -23,24 +24,33 @@ const mainElement = document.querySelector('.main');
 const footerElement = document.querySelector('.footer');
 const footerStatisticsElement = footerElement.querySelector('.footer__statistics');
 
-const mainNavFilter = generateMainNavItem();
+// profile rating
+let rating = generateProfileRrating(PROFILE_RATING);
+renderStr(headerElement, new ProfileRatingComponent(rating).getElement());
+
+// main navigation
 const films = generateFilms(TOTAL_FILMS_CARD);  // массив обьектов карточек фильма
+const mainNavFilter = generateMainNavItem(films);
+renderStr(mainElement, new MainNavComponent(mainNavFilter).getElement());
 
-// ---- функция отрисовки компонентов
-const render = (container, template, count = 1, place = `beforeend`) => {
-  if (count > 1) {
-    for (let i = 0; i < count; i++) {
-      container.insertAdjacentHTML(place, template);
-    }
-  } else {
-    container.insertAdjacentHTML(place, template);
-  }
-};
+// Sort
+renderStr(mainElement, new SortComponent().getElement());  // почему возвращает undefined???
 
-render(mainElement, createMainNavTemplate(mainNavFilter), `afterBegin`);
-render(footerStatisticsElement, createStatisticsTemplate());
-render(mainElement, createSortTemplate(SORT_BUTTON));
-render(headerElement, createProfileTemplate());
+
+// Statistics
+let totalFilms = films.length;
+renderStr(footerStatisticsElement, new StatisticsComponent(totalFilms).getElement());
+
+
+
+
+
+
+
+
+
+
+
 render(mainElement, createFilmsSectionTemplate());
 render(footerElement, creatFilmDetailsTemplate(films[0]), `afterEnd`);
 

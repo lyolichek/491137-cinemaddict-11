@@ -1,6 +1,16 @@
 // ---- создает карточку фильма
 export const createFilmCardTemplate = (film) => {
-  const {title, rating, year, duration, genre, poster, description, comments} = film;
+  const {
+    title,
+    rating,
+    year,
+    duration,
+    genre,
+    poster,
+    description,
+    comments,
+    filters: {isWatchList, isHistory, isFavorites}
+  } = film;
 
   return (
     `<article class="film-card">
@@ -15,9 +25,9 @@ export const createFilmCardTemplate = (film) => {
           <p class="film-card__description">${description}</p>
           <a class="film-card__comments">${comments.length} comments</a>
           <form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+            <button class="film-card__controls-item button ${isWatchList ? `film-card__controls-item--active` : ``} film-card__controls-item--add-to-watchlist">Add to watchlist</button>
+            <button class="film-card__controls-item button ${isHistory ? `film-card__controls-item--active` : ``} film-card__controls-item--mark-as-watched">Mark as watched</button>
+            <button class="film-card__controls-item button ${isFavorites ? `film-card__controls-item--active` : ``} film-card__controls-item--favorite">Mark as favorite</button>
           </form>
         </article>`
   );

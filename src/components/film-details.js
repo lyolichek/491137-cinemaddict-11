@@ -1,7 +1,22 @@
 import {createCommentMarkup} from "./film-comment.js";
 
 export const creatFilmDetailsTemplate = (film) => {
-  const {title, rating, age, poster, director, writers, actors, date, year, country, duration, description, comments} = film;
+  const {
+    title,
+    rating,
+    age,
+    poster,
+    director,
+    writers,
+    actors,
+    date,
+    year,
+    country,
+    duration,
+    description,
+    comments,
+    filters: {isWatchList, isHistory, isFavorites}
+  } = film;
 
   return (
     `<section class="film-details">

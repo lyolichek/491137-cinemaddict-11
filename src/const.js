@@ -16,3 +16,8 @@ export const SORT_BUTTON = [
   }
 ];
 
+export const PROFILE_RATING = [
+  `Novice`,
+  `Fan`,
+  `Movie Buff`,
+];

@@ -102,6 +102,10 @@ const COMMENT_TEXT = [
 ];
 
 
+const generateProfileRrating = (array) => {
+  return array[getRandomInteger(0, array.length)];
+};
+
 const generateComment = () => {
   return {
     emoji: getRandomItem(EMOJI),
@@ -135,6 +139,11 @@ const generateFilmDetail = () => {
     actors: getRandomItems(NAMES),
     country: getRandomItem(COUNTRY),
     comments: new Array(getRandomInteger(1, 5)).fill(``).map(generateComment),
+    filters: {
+      isWatchList: Math.random() > 0.5,
+      isHistory: Math.random() > 0.5,
+      isFavorites: Math.random() > 0.5
+    },
   };
 };
 
@@ -146,4 +155,4 @@ const generateFilms = (count) => {
 };
 
 
-export {generateFilms};
+export {generateFilms, generateProfileRrating};
