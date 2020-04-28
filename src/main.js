@@ -47,10 +47,18 @@ const renderFilm = (filmsListElement, film) => {
 
   const showFilmDetailsPopup = () => {
     document.body.append(filmDetailsElement);
+    document.addEventListener(`keydown`, escKeydown);
   };
 
   const closeFilmDetailsPopup = () => {
     filmDetailsElement.remove();
+    document.removeEventListener(`keydown`, escKeydown);
+  };
+
+  const escKeydown = (evt) => {
+    if (evt.keyCode === 27) {
+      filmDetailsElement.remove();
+    }
   };
 
   cardPosterElement.addEventListener(`click`, showFilmDetailsPopup);
@@ -66,8 +74,12 @@ const renderFilm = (filmsListElement, film) => {
 };
 
 // render films cards
-const renderFilms = () => {
-  render(mainElement, new FilmsListComponent(`visually-hidden`, `All movies. Upcoming`).getElement());
+const renderFilms = (films) => {
+  if (films.length === 0) {
+    render(mainElement, new FilmsListComponent(``, `There are no movies in our database`).getElement());
+  } else {
+    render(mainElement, new FilmsListComponent(`visually-hidden`, `All movies. Upcoming`).getElement());
+  }
 
   const filmsListElement = mainElement.querySelector(`.films-list`);
   const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
@@ -94,4 +106,4 @@ const renderFilms = () => {
   });
 };
 
-renderFilms();
+renderFilms(films);
