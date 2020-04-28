@@ -1,72 +1,97 @@
-import {SORT_BUTTON} from "./const.js"
+import {PROFILE_RATING} from "./const.js"
+import {render} from "./utils.js";
 
-import {createProfileTemplate} from "./components/profile.js"
-import {createStatisticsTemplate} from "./components/statistics.js"
+import {ProfileRatingComponent} from "./components/profile.js"
+import {StatisticsComponent} from "./components/statistics.js"
+import {MainNavComponent} from "./components/main-navigation.js"
+import {SortComponent} from "./components/sort.js"
+import {FilmsListComponent} from "./components/films-section.js"
+import {FilmCardComponent} from "./components/film-card.js"
+import {FilmDetailsComponent} from "./components/film-details.js"
+import {ShowMoreComponents} from "./components/show-more-button.js"
 
-import {createMainNavTemplate} from "./components/main-navigation.js"
+import {generateFilms, generateProfileRrating} from "./mock/film.js"
 import {generateMainNavItem} from "./mock/main-navigation.js"
-
-import {createSortTemplate} from "./components/sort.js"
-import {createFilmsSectionTemplate} from "./components/films-section.js"
-import {generateFilms} from "./mock/film.js"
-
-import {createFilmCardTemplate} from "./components/film-card.js"
-
-import {creatFilmDetailsTemplate} from "./components/film-details.js"
-import {createShowMoreElement} from "./components/show-more-button.js"
 
 const FIRST_FILMS_CARD = 5;
 const SHOW_MORE_FILMS_CARD = 5;
-const TOTAL_FILMS_CARD = 20;
+const TOTAL_FILMS_CARD = 21;
 const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 const footerElement = document.querySelector('.footer');
 const footerStatisticsElement = footerElement.querySelector('.footer__statistics');
 
-const mainNavFilter = generateMainNavItem();
-const films = generateFilms(TOTAL_FILMS_CARD);  // массив обьектов карточек фильма
+// profile rating
+let rating = generateProfileRrating(PROFILE_RATING);
+render(headerElement, new ProfileRatingComponent(rating).getElement());
 
-// ---- функция отрисовки компонентов
-const render = (container, template, count = 1, place = `beforeend`) => {
-  if (count > 1) {
-    for (let i = 0; i < count; i++) {
-      container.insertAdjacentHTML(place, template);
-    }
-  } else {
-    container.insertAdjacentHTML(place, template);
-  }
+// main navigation
+const films = generateFilms(TOTAL_FILMS_CARD);  // массив обьектов карточек фильма
+const mainNavFilter = generateMainNavItem(films);
+render(mainElement, new MainNavComponent(mainNavFilter).getElement());
+
+// Sort
+render(mainElement, new SortComponent().getElement());
+
+// Statistics
+let totalFilms = films.length;
+render(footerStatisticsElement, new StatisticsComponent(totalFilms).getElement());
+
+// render film
+const renderFilm = (filmsListElement, film) => {
+  const filmCardComponent = new FilmCardComponent(film).getElement();
+
+  const cardPosterElement = filmCardComponent.querySelector(`.film-card__poster`);
+  const cardTitleElement = filmCardComponent.querySelector(`.film-card__title`);
+  const cardCommentsElement = filmCardComponent.querySelector(`.film-card__comments`);
+
+  const showFilmDetailsPopup = () => {
+    document.body.append(filmDetailsElement);
+  };
+
+  const closeFilmDetailsPopup = () => {
+    filmDetailsElement.remove();
+  };
+
+  cardPosterElement.addEventListener(`click`, showFilmDetailsPopup);
+  cardTitleElement.addEventListener(`click`, showFilmDetailsPopup);
+  cardCommentsElement.addEventListener(`click`, showFilmDetailsPopup);
+
+  const filmDetailsElement = new FilmDetailsComponent(film).getElement();
+  const filmDetailsCloseButton = filmDetailsElement.querySelector(`.film-details__close-btn`);
+
+  filmDetailsCloseButton.addEventListener(`click`, closeFilmDetailsPopup);
+
+  render(filmsListElement, filmCardComponent);
 };
 
-render(mainElement, createMainNavTemplate(mainNavFilter), `afterBegin`);
-render(footerStatisticsElement, createStatisticsTemplate());
-render(mainElement, createSortTemplate(SORT_BUTTON));
-render(headerElement, createProfileTemplate());
-render(mainElement, createFilmsSectionTemplate());
-render(footerElement, creatFilmDetailsTemplate(films[0]), `afterEnd`);
+// render films cards
+const renderFilms = () => {
+  render(mainElement, new FilmsListComponent(`visually-hidden`, `All movies. Upcoming`).getElement());
 
-const filmsListElement = mainElement.querySelector(`.films-list`);
-const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
+  const filmsListElement = mainElement.querySelector(`.films-list`);
+  const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-let showFilmsCard = FIRST_FILMS_CARD;
+  let showFilmsCard = FIRST_FILMS_CARD;
+  films.slice(0, FIRST_FILMS_CARD).forEach((item) => renderFilm(filmsContainerElement, item));
 
-films.slice(0, FIRST_FILMS_CARD).forEach((item) => render(filmsContainerElement, createFilmCardTemplate(item)));
+  // show more button
+  render(filmsListElement, new ShowMoreComponents().getElement());
 
-render(filmsListElement, createShowMoreElement());
+  const showMoreButton = mainElement.querySelector(`.films-list__show-more`);
 
-const showMoreButton = mainElement.querySelector(`.films-list__show-more`);
+  // отрисовка карточек при клике на кнопку show More
+  showMoreButton.addEventListener('click', function(){
+    const prewFilmsCard = showFilmsCard;
+    showFilmsCard = showFilmsCard + SHOW_MORE_FILMS_CARD;
 
-//  отрисовка карточек при клике на кнопку show More
-showMoreButton.addEventListener('click', function(){
-  const prewFilmsCard = showFilmsCard;
-  showFilmsCard = showFilmsCard + SHOW_MORE_FILMS_CARD;
+    films.slice(prewFilmsCard, showFilmsCard)
+      .forEach((item) => renderFilm(filmsContainerElement, item));
 
-  films.slice(prewFilmsCard, showFilmsCard)
-    .forEach((item) => render(filmsContainerElement, createFilmCardTemplate(item)));
+    if(showFilmsCard >= films.length) {
+      showMoreButton.remove();
+    }
+  });
+};
 
-  if(showFilmsCard >= films.length) {
-    showMoreButton.remove();
-  }
-});
-
-const filmDetailsElement = document.querySelector('.film-details');
-filmDetailsElement.style.display = 'none';
+renderFilms();

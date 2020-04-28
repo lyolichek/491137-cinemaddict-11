@@ -11,5 +11,17 @@ const getRandomItems = (array) => {
   return array.slice(0, maxItems).join(`, `);
 };
 
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
 
-export {getRandomItem, getRandomInteger, getRandomItems};
+  return newElement.firstElementChild;
+};
+
+// ---- функция отрисовки компонентов
+const render = (container, template) => {
+  container.append(template);
+};
+
+
+export {getRandomItem, getRandomInteger, getRandomItems, createElement, render};

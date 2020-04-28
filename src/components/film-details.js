@@ -1,7 +1,42 @@
-import {createCommentMarkup} from "./film-comment.js";
+import {createElement} from "../utils";
 
-export const creatFilmDetailsTemplate = (film) => {
-  const {title, rating, age, poster, director, writers, actors, date, year, country, duration, description, comments} = film;
+const createCommentMarkup = (comment) => {
+  const {emoji, text, author, date} = comment;
+
+  return (
+    `<li class="film-details__comment">
+      <span class="film-details__comment-emoji">
+        <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
+      </span>
+      <div>
+        <p class="film-details__comment-text">${text}</p>
+        <p class="film-details__comment-info">
+          <span class="film-details__comment-author">${author}</span>
+          <span class="film-details__comment-day">${date}</span>
+          <button class="film-details__comment-delete">Delete</button>
+        </p>
+      </div>
+     </li>`
+  );
+};
+
+const createFilmDetailsTemplate = (film) => {
+  const {
+    title,
+    rating,
+    age,
+    poster,
+    director,
+    writers,
+    actors,
+    date,
+    year,
+    country,
+    duration,
+    description,
+    comments,
+    filters: {isWatchList, isHistory, isFavorites}
+  } = film;
 
   return (
     `<section class="film-details">
@@ -67,13 +102,13 @@ export const creatFilmDetailsTemplate = (film) => {
 
       <section class="film-details__controls">
         <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist" ${isWatchList ? `checked` : ``}>Add to watchlist</label>
 
         <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-        <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+        <label for="watched" class="film-details__control-label film-details__control-label--watched" ${isHistory ? `checked` : ``}>Already watched</label>
 
         <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-        <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+        <label for="favorite" class="film-details__control-label film-details__control-label--favorite" ${isFavorites ? `checked` : ``}>Add to favorites</label>
       </section>
     </div>
 
@@ -82,7 +117,7 @@ export const creatFilmDetailsTemplate = (film) => {
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length} comments</span></h3>
 
         <ul class="film-details__comments-list">
-          ${comments.map((item) => createCommentMarkup(item))}
+          ${comments.map((item) => createCommentMarkup(item)).join(`\n`)}
         </ul>
 
         <div class="film-details__new-comment">
@@ -120,3 +155,26 @@ export const creatFilmDetailsTemplate = (film) => {
 </section>`
   );
 };
+
+export class FilmDetailsComponent {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

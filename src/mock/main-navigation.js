@@ -1,5 +1,5 @@
 // создаем данные для фильтра навигации
-const generateMainNavItem = () => {
+const generateMainNavItem = (films) => {
   return (
     [
       {
@@ -14,19 +14,19 @@ const generateMainNavItem = () => {
         title: `Watchlist`,
         link: `#watchlist`,
         activeClass: ``,
-        count: 13
+        count: films.filter((film) => film.filters.isWatchList).length,
       },
       {
         title: `History`,
         link: `#history`,
         activeClass: ``,
-        count: 4
+        count: films.filter((film) => film.filters.isHistory).length,
       },
       {
         title: `Favorites`,
         link: `#favorites`,
         activeClass: ``,
-        count: 8
+        count: films.filter((film) => film.filters.isFavorites).length,
       }
     ]
   );
