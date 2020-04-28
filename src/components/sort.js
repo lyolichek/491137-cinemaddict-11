@@ -1,4 +1,4 @@
-import {SORT_BUTTON} from "../const.js"
+import {SORT_BUTTON} from "../const.js";
 import {createElement} from "../utils.js";
 
 const createSortMarkup = (item) => {
@@ -28,8 +28,8 @@ export class SortComponent {
   }
 
   getElement() {
-    if(!this._element) {
-      this._element = createElement(this.getTemplate())
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;
