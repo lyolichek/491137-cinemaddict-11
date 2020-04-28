@@ -24,12 +24,10 @@ export class SortComponent {
   }
 
   getTemplate() {
-    console.log(createSortTemplate(SORT_BUTTON));
     return createSortTemplate(SORT_BUTTON);
   }
 
   getElement() {
-    console.log(111);
     if(!this._element) {
       this._element = createElement(this.getTemplate())
     }

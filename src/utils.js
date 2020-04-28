@@ -15,17 +15,13 @@ const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
 
-  return newElement.firstChild;
+  return newElement.firstElementChild;
 };
 
 // ---- функция отрисовки компонентов
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
-
-const renderStr = (container, template) => {
+const render = (container, template) => {
   container.append(template);
 };
 
 
-export {getRandomItem, getRandomInteger, getRandomItems, createElement, render, renderStr};
+export {getRandomItem, getRandomInteger, getRandomItems, createElement, render};

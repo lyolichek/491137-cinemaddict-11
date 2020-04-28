@@ -1,24 +1,21 @@
 import {PROFILE_RATING} from "./const.js"
-import {render, renderStr} from "./utils.js";
+import {render} from "./utils.js";
 
 import {ProfileRatingComponent} from "./components/profile.js"
 import {StatisticsComponent} from "./components/statistics.js"
-
 import {MainNavComponent} from "./components/main-navigation.js"
-import {generateMainNavItem} from "./mock/main-navigation.js"
-
 import {SortComponent} from "./components/sort.js"
-import {createFilmsSectionTemplate} from "./components/films-section.js"
+import {FilmsListComponent} from "./components/films-section.js"
+import {FilmCardComponent} from "./components/film-card.js"
+import {FilmDetailsComponent} from "./components/film-details.js"
+import {ShowMoreComponents} from "./components/show-more-button.js"
+
 import {generateFilms, generateProfileRrating} from "./mock/film.js"
-
-import {createFilmCardTemplate} from "./components/film-card.js"
-
-import {creatFilmDetailsTemplate} from "./components/film-details.js"
-import {createShowMoreElement} from "./components/show-more-button.js"
+import {generateMainNavItem} from "./mock/main-navigation.js"
 
 const FIRST_FILMS_CARD = 5;
 const SHOW_MORE_FILMS_CARD = 5;
-const TOTAL_FILMS_CARD = 20;
+const TOTAL_FILMS_CARD = 21;
 const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 const footerElement = document.querySelector('.footer');
@@ -26,57 +23,75 @@ const footerStatisticsElement = footerElement.querySelector('.footer__statistics
 
 // profile rating
 let rating = generateProfileRrating(PROFILE_RATING);
-renderStr(headerElement, new ProfileRatingComponent(rating).getElement());
+render(headerElement, new ProfileRatingComponent(rating).getElement());
 
 // main navigation
 const films = generateFilms(TOTAL_FILMS_CARD);  // массив обьектов карточек фильма
 const mainNavFilter = generateMainNavItem(films);
-renderStr(mainElement, new MainNavComponent(mainNavFilter).getElement());
+render(mainElement, new MainNavComponent(mainNavFilter).getElement());
 
 // Sort
-renderStr(mainElement, new SortComponent().getElement());  // почему возвращает undefined???
-
+render(mainElement, new SortComponent().getElement());
 
 // Statistics
 let totalFilms = films.length;
-renderStr(footerStatisticsElement, new StatisticsComponent(totalFilms).getElement());
+render(footerStatisticsElement, new StatisticsComponent(totalFilms).getElement());
 
+// render film
+const renderFilm = (filmsListElement, film) => {
+  const filmCardComponent = new FilmCardComponent(film).getElement();
 
+  const cardPosterElement = filmCardComponent.querySelector(`.film-card__poster`);
+  const cardTitleElement = filmCardComponent.querySelector(`.film-card__title`);
+  const cardCommentsElement = filmCardComponent.querySelector(`.film-card__comments`);
 
+  const showFilmDetailsPopup = () => {
+    document.body.append(filmDetailsElement);
+  };
 
+  const closeFilmDetailsPopup = () => {
+    filmDetailsElement.remove();
+  };
 
+  cardPosterElement.addEventListener(`click`, showFilmDetailsPopup);
+  cardTitleElement.addEventListener(`click`, showFilmDetailsPopup);
+  cardCommentsElement.addEventListener(`click`, showFilmDetailsPopup);
 
+  const filmDetailsElement = new FilmDetailsComponent(film).getElement();
+  const filmDetailsCloseButton = filmDetailsElement.querySelector(`.film-details__close-btn`);
 
+  filmDetailsCloseButton.addEventListener(`click`, closeFilmDetailsPopup);
 
+  render(filmsListElement, filmCardComponent);
+};
 
+// render films cards
+const renderFilms = () => {
+  render(mainElement, new FilmsListComponent(`visually-hidden`, `All movies. Upcoming`).getElement());
 
+  const filmsListElement = mainElement.querySelector(`.films-list`);
+  const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-render(mainElement, createFilmsSectionTemplate());
-render(footerElement, creatFilmDetailsTemplate(films[0]), `afterEnd`);
+  let showFilmsCard = FIRST_FILMS_CARD;
+  films.slice(0, FIRST_FILMS_CARD).forEach((item) => renderFilm(filmsContainerElement, item));
 
-const filmsListElement = mainElement.querySelector(`.films-list`);
-const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
+  // show more button
+  render(filmsListElement, new ShowMoreComponents().getElement());
 
-let showFilmsCard = FIRST_FILMS_CARD;
+  const showMoreButton = mainElement.querySelector(`.films-list__show-more`);
 
-films.slice(0, FIRST_FILMS_CARD).forEach((item) => render(filmsContainerElement, createFilmCardTemplate(item)));
+  // отрисовка карточек при клике на кнопку show More
+  showMoreButton.addEventListener('click', function(){
+    const prewFilmsCard = showFilmsCard;
+    showFilmsCard = showFilmsCard + SHOW_MORE_FILMS_CARD;
 
-render(filmsListElement, createShowMoreElement());
+    films.slice(prewFilmsCard, showFilmsCard)
+      .forEach((item) => renderFilm(filmsContainerElement, item));
 
-const showMoreButton = mainElement.querySelector(`.films-list__show-more`);
+    if(showFilmsCard >= films.length) {
+      showMoreButton.remove();
+    }
+  });
+};
 
-//  отрисовка карточек при клике на кнопку show More
-showMoreButton.addEventListener('click', function(){
-  const prewFilmsCard = showFilmsCard;
-  showFilmsCard = showFilmsCard + SHOW_MORE_FILMS_CARD;
-
-  films.slice(prewFilmsCard, showFilmsCard)
-    .forEach((item) => render(filmsContainerElement, createFilmCardTemplate(item)));
-
-  if(showFilmsCard >= films.length) {
-    showMoreButton.remove();
-  }
-});
-
-const filmDetailsElement = document.querySelector('.film-details');
-filmDetailsElement.style.display = 'none';
+renderFilms();
